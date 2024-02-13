@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from itertools import islice
 import os
 import tiktoken
+import openai
 
 load_dotenv()
 
@@ -61,13 +62,17 @@ def analisador_sentimento(produto):
         }
     ]
 
+    try:
+        resposta = client.chat.completions.create(
+            messages = lista_mensagens,
+            model=modelo
+        )
 
-    resposta = client.chat.completions.create(
-        messages = lista_mensagens,
-        model=modelo
-    )
-
-    texto_resposta = resposta.choices[0].message.content
-    salva(f"./dados/analise-{produto}.txt", texto_resposta)
-
+        texto_resposta = resposta.choices[0].message.content
+        salva(f"./dados/analise-{produto}.txt", texto_resposta)
+    except openai.AuthenticationError as e:
+        print(f"Erro de autenticação: {e}")	
+    except openai.ApiError as e:
+        print(f"Erro de API: {e}")
+        
 analisador_sentimento("Maquiagem mineral")
