@@ -119,6 +119,35 @@ def gera_parecer(transacao):
     return conteudo
     
         
+# código omitido
+
+def gera_recomendacoes(parecer):
+    print("3. Gerando recomendações")
+        
+    prompt_sistema = f"""
+    Para a seguinte transação, forneça uma recomendação apropriada baseada no status e nos detalhes da transação da Transação: {parecer}
+
+    As recomendações podem ser "Notificar Cliente", "Acionar setor Anti-Fraude" ou "Realizar Verificação Manual".
+    Elas devem ser escritas no formato técnico.
+
+    Inclua também uma classificação do tipo de fraude, se aplicável. 
+    """
+    lista_mensagens = [
+        {
+            "role": "system",
+            "content": prompt_sistema
+        }
+    ]
+    
+    resposta = cliente.chat.completions.create(
+        messages = lista_mensagens,
+        model=modelo
+    )
+    
+    conteudo = resposta.choices[0].message.content
+    print("Finalizou a geração de recomendações")
+    return conteudo
+
 
 
 lista_transacoes = carrega("dados/transacoes.json")
@@ -127,5 +156,9 @@ transacoes_analisadas = analisar_transacao(lista_transacoes)
 for uma_transacao in transacoes_analisadas["transacoes"]:
     if uma_transacao["status"]=="Possível Fraude":
         um_parecer = gera_parecer(uma_transacao)
-        print(um_parecer)
+        recomendacao = gera_recomendacoes(um_parecer)
+        id_transacao = uma_transacao["id"]
+        produto_transacao = uma_transacao["nome_produto"]
+        status_transacao = uma_transacao["status"]
+        salva(f"dados/transacao-{id_transacao}-{produto_transacao}-{status_transacao}.txt", recomendacao)
 

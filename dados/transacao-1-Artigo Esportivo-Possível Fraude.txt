@@ -1,0 +1,5 @@
+Recomendação: Realizar Verificação Manual.
+
+Justificativa: O status da transação é "Possível Fraude", mas nenhuma informação específica que indique fraude foi fornecida nesta transação. Portanto, é recomendado realizar uma verificação manual para determinar se há alguma atividade suspeita ou indícios de fraude. 
+
+Classificação do Tipo de Fraude: Não Aplicável.
